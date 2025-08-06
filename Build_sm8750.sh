@@ -26,7 +26,7 @@ info "3.一加 13T"
 info "4.一加 Pad 2 Pro"
 info "5.一加 Ace5 至尊版"
 info "6.真我 GT 7 Pro"
-info "7.真我 GT 7 Pro 竞速版"
+info "7.真我 GT 7 Pro 竞速"
 
 read -p "输入选择 [1-4]: " device_choice
 
@@ -316,6 +316,11 @@ CONFIG_CRYPTO_LZ4HC=y
 CONFIG_CRYPTO_LZ4=y
 CONFIG_CRYPTO_LZ4K=y
 CONFIG_CRYPTO_842=y
+CONFIG_DEBUG_INFO_BTF=y
+CONFIG_PAHOLE_HAS_SPLIT_BTF=y
+CONFIG_PAHOLE_HAS_BTF_TAG=y
+CONFIG_DEBUG_INFO_BTF_MODULES=y
+CONFIG_MODULE_ALLOW_BTF_MISMATCH=y
 CONFIG_LOCALVERSION_AUTO=n" >> gki_defconfig
 
 # 返回kernel_platform目录
