@@ -9,7 +9,9 @@ on:
         required: true
         default: 'Build_oneplus_sm8750'
         options:
-          - Build_oneplus_sm8750
+          - "Build_oneplus_sm8750"
+          - "OTA镜像分区提取"
+          - "清理全部ccache缓存"
 
       count:
         description: '最多清理的运行次数'
@@ -104,7 +106,7 @@ jobs:
           # 仅保留前 N 条
           TO_DELETE_RUNS=$(echo "$SORTED_RUNS" | jq ".[0:${COUNT}]")
 
-          echo "$TO_DELETE_RUNS" | jq -c '.[]' | while read run; do
+          echo "$TO_DELETE_RUNS" | jq -c '.[]' | while IFS= read -r run; do
             ID=$(echo "$run" | jq -r '.id')
             STATUS=$(echo "$run" | jq -r '.conclusion')
             STATE=$(echo "$run" | jq -r '.status')
@@ -125,9 +127,9 @@ jobs:
           echo "清理本工作流运行记录..."
           SELF_WORKFLOW_ID=$(gh api repos/$REPO/actions/workflows | jq -r '.workflows[] | select(.name == "清理工作流运行记录") | .id')
           if [ -n "$SELF_WORKFLOW_ID" ]; then
-            SELF_RUNS=$(gh api "repos/$REPO/actions/workflows/$SELF_WORKFLOW_ID/runs?per_page=50" | jq -c '.workflow_runs[]')
-
-            echo "$SELF_RUNS" | while read run; do
+            gh api "repos/$REPO/actions/workflows/$SELF_WORKFLOW_ID/runs?per_page=50" \
+              | jq -c '.workflow_runs[]' \
+              | while IFS= read -r run; do
               ID=$(echo "$run" | jq -r '.id')
               if [[ "$ID" == "$CURRENT_RUN_ID" ]]; then
                 echo "跳过当前运行 ID: $ID"
